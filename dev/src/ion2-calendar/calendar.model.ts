@@ -17,6 +17,11 @@ export interface CalendarDay {
   isNextMonth?: boolean;
   title?: string;
   subTitle?: string;
+  showCircle?: boolean;
+  showCircleOutline?: boolean;
+  backgroundColor?: string;
+  borderColor?: string;
+  circleItems?: any;
   marked?: boolean;
   style?: {
     title?: string;
@@ -38,6 +43,11 @@ export interface DayConfig {
   title?: string;
   subTitle?: string;
   cssClass?: string;
+  showCircle?: boolean;
+  showCircleOutline?: boolean;
+  backgroundColor?: string;
+  borderColor?: string;
+  circleItems?: any;
 }
 
 export interface ModalOptions {
@@ -62,7 +72,7 @@ export interface CalendarModalOptions extends CalendarOptions {
   defaultScrollTo?: Date;
   defaultDate?: DefaultDate;
   defaultDates?: DefaultDate[];
-  defaultDateRange?: { from: DefaultDate, to?: DefaultDate } | null;
+  defaultDateRange?: { from: DefaultDate; to?: DefaultDate } | null;
   step?: number;
   /**
    * @deprecated this version notwork
@@ -83,8 +93,8 @@ export interface CalendarOptions {
   defaultSubtitle?: string;
   daysConfig?: Array<DayConfig>;
   /**
-  * show last month & next month days fill six weeks
-  */
+   * show last month & next month days fill six weeks
+   */
   showAdjacentMonthDay?: boolean;
 }
 
@@ -110,7 +120,18 @@ export class CalendarComponentMonthChange {
 }
 
 export type DefaultDate = Date | string | number | null;
-export type Colors = 'primary' | 'secondary' | 'danger' | 'light' | 'dark' | string
-export type PickMode = 'multi' | 'single' | 'range'
-export type CalendarComponentTypeProperty = ('string' | 'js-date' | 'moment' | 'time' | 'object');
+export type Colors =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "light"
+  | "dark"
+  | string;
+export type PickMode = "multi" | "single" | "range";
+export type CalendarComponentTypeProperty =
+  | "string"
+  | "js-date"
+  | "moment"
+  | "time"
+  | "object";
 export type CalendarComponentPayloadTypes = string | Date | number | {};

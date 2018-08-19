@@ -1,6 +1,19 @@
-import { Component, ChangeDetectorRef, Input, Output, EventEmitter, forwardRef, AfterViewInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CalendarDay, CalendarMonth, CalendarOriginal, PickMode } from '../calendar.model'
+import {
+  Component,
+  ChangeDetectorRef,
+  Input,
+  Output,
+  EventEmitter,
+  forwardRef,
+  AfterViewInit
+} from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import {
+  CalendarDay,
+  CalendarMonth,
+  CalendarOriginal,
+  PickMode
+} from "../calendar.model";
 import { defaults, pickModes } from "../config";
 
 export const MONTH_VALUE_ACCESSOR: any = {
@@ -10,7 +23,7 @@ export const MONTH_VALUE_ACCESSOR: any = {
 };
 
 @Component({
-  selector: 'ion-calendar-month',
+  selector: "ion-calendar-month",
   providers: [MONTH_VALUE_ACCESSOR],
   template: `
     <div [class]="color">
@@ -30,6 +43,16 @@ export const MONTH_VALUE_ACCESSOR: any = {
                         [disabled]="day.disable">
                   <p>{{day.title}}</p>
                   <small *ngIf="day.subTitle">{{day?.subTitle}}</small>
+                  <div class="flex flex-row flex-align-center flex-justify-center circle-items" *ngIf="!day.circleItems?.length && (day.showCircle || day.showCircleOutline)">
+                    <span class="circle-item" *ngIf="day.showCircle" [style.background-color]="day.backgroundColor"></span>
+                    <span class="circle-item circle-item--outline" *ngIf="day.showCircleOutline" [style.border-color]="day.borderColor"></span>
+                  </div>
+                  <div class="flex flex-row flex-align-center flex-justify-center circle-items" *ngIf="day.circleItems?.length">
+                    <span *ngFor="let item of day.circleItems">
+                      <span class="circle-item" *ngIf="item.showCircle" [style.background-color]="item.backgroundColor"></span>
+                      <span class="circle-item circle-item--outline" *ngIf="item.showCircleOutline" [style.border-color]="item.borderColor"></span>
+                    </span>
+                  </div>
                 </button>
               </ng-container>
             </div>
@@ -60,6 +83,16 @@ export const MONTH_VALUE_ACCESSOR: any = {
                         [disabled]="day.disable">
                   <p>{{day.title}}</p>
                   <small *ngIf="day.subTitle">{{day?.subTitle}}</small>
+                  <div class="flex flex-row flex-align-center flex-justify-center circle-items" *ngIf="!day.circleItems?.length && (day.showCircle || day.showCircleOutline)">
+                    <span class="circle-item" *ngIf="day.showCircle" [style.background-color]="day.backgroundColor"></span>
+                    <span class="circle-item circle-item--outline" *ngIf="day.showCircleOutline" [style.border-color]="day.borderColor"></span>
+                  </div>
+                  <div class="flex flex-row flex-align-center flex-justify-center circle-items" *ngIf="day.circleItems?.length">
+                    <span *ngFor="let item of day.circleItems">
+                      <span class="circle-item" *ngIf="item.showCircle" [style.background-color]="item.backgroundColor"></span>
+                      <span class="circle-item circle-item--outline" *ngIf="item.showCircleOutline" [style.border-color]="item.borderColor"></span>
+                    </span>
+                  </div>
                 </button>
               </ng-container>
 
@@ -71,18 +104,27 @@ export const MONTH_VALUE_ACCESSOR: any = {
   `
 })
 export class MonthComponent implements ControlValueAccessor, AfterViewInit {
+  @Input()
+  month: CalendarMonth;
+  @Input()
+  pickMode: PickMode;
+  @Input()
+  isSaveHistory: boolean;
+  @Input()
+  id: any;
+  @Input()
+  readonly = false;
+  @Input()
+  color: string = defaults.COLOR;
 
-  @Input() month: CalendarMonth;
-  @Input() pickMode: PickMode;
-  @Input() isSaveHistory: boolean;
-  @Input() id: any;
-  @Input() readonly = false;
-  @Input() color: string = defaults.COLOR;
-
-  @Output() onChange: EventEmitter<CalendarDay[]> = new EventEmitter();
-  @Output() onSelect: EventEmitter<CalendarDay> = new EventEmitter();
-  @Output() onSelectStart: EventEmitter<CalendarDay> = new EventEmitter();
-  @Output() onSelectEnd: EventEmitter<CalendarDay> = new EventEmitter();
+  @Output()
+  onChange: EventEmitter<CalendarDay[]> = new EventEmitter();
+  @Output()
+  onSelect: EventEmitter<CalendarDay> = new EventEmitter();
+  @Output()
+  onSelectStart: EventEmitter<CalendarDay> = new EventEmitter();
+  @Output()
+  onSelectEnd: EventEmitter<CalendarDay> = new EventEmitter();
 
   _date: Array<CalendarDay | null> = [null, null];
   _isInit = false;
@@ -90,10 +132,10 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
   _onTouched: Function;
 
   get _isRange(): boolean {
-    return this.pickMode === pickModes.RANGE
+    return this.pickMode === pickModes.RANGE;
   }
 
-  constructor(public ref: ChangeDetectorRef) { }
+  constructor(public ref: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     this._isInit = true;
@@ -119,7 +161,11 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
 
   isEndSelection(day: CalendarDay): boolean {
     if (!day) return false;
-    if (this.pickMode !== pickModes.RANGE || !this._isInit || this._date[1] === null) {
+    if (
+      this.pickMode !== pickModes.RANGE ||
+      !this._isInit ||
+      this._date[1] === null
+    ) {
       return false;
     }
 
@@ -145,7 +191,11 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
 
   isStartSelection(day: CalendarDay): boolean {
     if (!day) return false;
-    if (this.pickMode !== pickModes.RANGE || !this._isInit || this._date[0] === null) {
+    if (
+      this.pickMode !== pickModes.RANGE ||
+      !this._isInit ||
+      this._date[0] === null
+    ) {
       return false;
     }
 
@@ -153,23 +203,20 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
   }
 
   isSelected(time: number): boolean {
-
     if (Array.isArray(this._date)) {
-
       if (this.pickMode !== pickModes.MULTI) {
         if (this._date[0] !== null) {
-          return time === this._date[0].time
+          return time === this._date[0].time;
         }
 
         if (this._date[1] !== null) {
-          return time === this._date[1].time
+          return time === this._date[1].time;
         }
       } else {
         return this._date.findIndex(e => e !== null && e.time === time) !== -1;
       }
-
     } else {
-      return false
+      return false;
     }
   }
 
@@ -207,8 +254,9 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
     }
 
     if (this.pickMode === pickModes.MULTI) {
-
-      const index = this._date.findIndex(e => e !== null && e.time === item.time);
+      const index = this._date.findIndex(
+        e => e !== null && e.time === item.time
+      );
 
       if (index === -1) {
         this._date.push(item);
@@ -218,5 +266,4 @@ export class MonthComponent implements ControlValueAccessor, AfterViewInit {
       this.onChange.emit(this._date.filter(e => e !== null));
     }
   }
-
 }
